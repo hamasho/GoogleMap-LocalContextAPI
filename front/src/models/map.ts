@@ -1,5 +1,10 @@
 enum PlaceType {
     Restaurant = 'restaurant',
+    Bar = 'bar',
+    Parking = 'parking',
+    Doctor = 'doctor',
+    Store = 'store',
+    Supermarket = 'supermarket',
     Gym = 'gym',
     Cafe = 'cafe',
     ATM = 'atm',
@@ -9,6 +14,7 @@ enum PlaceType {
 class Map {
     mapView: any;
     googleMap: any;
+    google: any;
     isLoaded = false;
 
     constructor() {
@@ -31,7 +37,8 @@ class Map {
         // Attach your callback function to the `window` object
         (window as any).initMap = function() {
             const lat = 35.732872, lng = 139.710090;
-            const localContextMapView = new (window as any)['google'].maps.localContext.LocalContextMapView({
+            const google = that.google = (window as any)['google'];
+            const localContextMapView = new google.maps.localContext.LocalContextMapView({
                 element: document.querySelector('#map'),
                 placeTypePreferences: [{type: 'restaurant', weight: 10}],
                 maxPlaceCount: 24,
@@ -47,6 +54,7 @@ class Map {
             (window as any).mv = localContextMapView;  // FIXME: for debug
             that.googleMap = localContextMapView.map;
             that.mapView = localContextMapView;
+
             setReady();
         };
 
@@ -93,6 +101,14 @@ class Map {
         ptp.push({
             type: pt,
             weight,
+        });
+    }
+
+    addMarker(lat: number, lng: number, title='') {
+        new this.google.maps.Marker({
+            position: { lat, lng },
+            map: this.googleMap,
+            title,
         });
     }
 };
