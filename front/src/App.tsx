@@ -1,11 +1,14 @@
 import React from 'react';
 import './App.css';
 import Map from './components/Map';
+import MapModel from './models/map';
 
-function App() {
+const App = () => {
+    const map = new MapModel();
+
     return (
         <div className="App">
-            <Map />
+            <Map map={map} />
         </div>
     );
 }
