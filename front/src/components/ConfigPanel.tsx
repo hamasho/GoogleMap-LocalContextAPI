@@ -1,21 +1,24 @@
 import React from 'react';
-import MapModel from '../models/map';
+import { Form } from 'semantic-ui-react';
+import MapModel, { PlaceType } from '../models/map';
 
 type Props = {
     map: MapModel,
 };
 
 const ConfigPanel = ({ map }: Props) => {
-    const handleZoom = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        map.zoom = parseInt(e.target.value, 10);
-    };
+    map.setPlacePreference(PlaceType.Cafe, 10);
 
     return (
-        <div>
-            <label htmlFor="">ZOOM:</label>
-            <input type="" value={map.zoom} onChange={handleZoom} />
-        </div>
+        <Form>
+            <Form.Group grouped>
+                <Form.Field
+                    label='Restaurants'
+                    control='input'
+                    type='checkbox'
+                />
+            </Form.Group>
+        </Form>
     );
 };
 

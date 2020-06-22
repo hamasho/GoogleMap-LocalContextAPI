@@ -34,10 +34,6 @@ class Map extends React.Component<{}, State> {
     }
 
     render() {
-        console.log('renders', this.state.ready);
-        if (this.state.ready) {
-            console.log(this.state.map.googleMap);
-        }
         return <div>
             <div id="map"></div>
             { this.state.ready ? <ConfigPanel map={this.state.map} /> : 'WAITING...' }

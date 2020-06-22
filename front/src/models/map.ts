@@ -1,8 +1,13 @@
-// enum PlaceType {
-//     Restaurant = 'restaurant',
-// };
+enum PlaceType {
+    Restaurant = 'restaurant',
+    Gym = 'gym',
+    Cafe = 'cafe',
+    ATM = 'atm',
+    Park = 'park',
+};
 
 class Map {
+    mapView: any;
     googleMap: any;
     isLoaded = false;
 
@@ -28,8 +33,9 @@ class Map {
             const lat = 35.732872, lng = 139.710090;
             const localContextMapView = new (window as any)['google'].maps.localContext.LocalContextMapView({
                 element: document.querySelector('#map'),
-                placeTypePreferences: ['restaurant'],
-                maxPlaceCount: 12,
+                placeTypePreferences: [{type: 'restaurant', weight: 10}],
+                maxPlaceCount: 24,
+                directionsOptions: { origin: {lat, lng} },
             });
 
             // Set inner map options.
@@ -40,6 +46,7 @@ class Map {
 
             (window as any).mv = localContextMapView;  // FIXME: for debug
             that.googleMap = localContextMapView.map;
+            that.mapView = localContextMapView;
             setReady();
         };
 
@@ -69,6 +76,29 @@ class Map {
             maxValueCount: value,
         });
     }
+
+    setPlacePreference(pt: PlaceType, weight: number) {
+        const ptp = this.mapView.placeTypePreferences;
+        for (let i = 0; i < ptp.length; i++) {
+            const p = ptp[i];
+            if (p.type === pt) {
+                if (weight === 0) {
+                    ptp.splice(i, 1);
+                } else {
+                    p.weight = weight;
+                }
+                return;
+            }
+        }
+        ptp.push({
+            type: pt,
+            weight,
+        });
+    }
 };
 
 export default Map;
+
+export {
+    PlaceType,
+};
