@@ -1,11 +1,20 @@
+// enum PlaceType {
+//     Restaurant = 'restaurant',
+// };
+
 class Map {
     googleMap: any;
+    isLoaded = false;
 
     constructor() {
         this.googleMap = null;
     }
 
-    init() {
+    init(setReady: () => void) {
+        if (this.isLoaded) {
+            return;
+        }
+
         const script = document.createElement('script');
         const key = process.env.REACT_APP_MAP_API_KEY;
         script.src = `https://maps.googleapis.com/maps/api/js?libraries=localContext&v=beta&key=${key}&callback=initMap`;
@@ -31,14 +40,33 @@ class Map {
 
             (window as any).mv = localContextMapView;  // FIXME: for debug
             that.googleMap = localContextMapView.map;
+            setReady();
         };
 
         document.head.appendChild(script);
+        this.isLoaded = true;
+    }
+
+    get zoom() {
+        return this.googleMap.zoom;
     }
 
     set zoom(value: number) {
         this.googleMap.setOptions({
             zoom: value,
+        });
+    }
+
+    get maxPlaceCount() {
+        return this.googleMap.maxPlaceCount;
+    }
+
+    set maxPlaceCount(value: number) {
+        if (value < 0 || value > 24) {
+            throw new RangeError(`maxPlaceCount should be in (1, 24). Got ${value}`);
+        }
+        this.googleMap.setOptions({
+            maxValueCount: value,
         });
     }
 };
