@@ -8,6 +8,7 @@ type DispatchArg = {
 
 const reducer = (state: GlobalState, { action, payload }: DispatchArg) => {
     let newValues: Partial<GlobalState> = {};
+    let newState;
 
     switch (action) {
         case Action.SET_READY:
@@ -18,7 +19,7 @@ const reducer = (state: GlobalState, { action, payload }: DispatchArg) => {
             };
 
         case Action.CHANGE_WEIGHT:
-            const newState = {
+            newState = {
                 ...state,
                 typeWeights: {
                     ...state.typeWeights,
@@ -29,8 +30,9 @@ const reducer = (state: GlobalState, { action, payload }: DispatchArg) => {
             return newState;
 
         case Action.RELOAD_MAP:
-            state.map.reloadAfter(state);
-            return state;
+            newState = state.map.updateState(state);
+            state.map.reloadAfter(newState);
+            return newState;
 
         case Action.SET_ZOOM:
         default:

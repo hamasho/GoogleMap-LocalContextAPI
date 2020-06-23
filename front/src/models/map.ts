@@ -105,46 +105,14 @@ class Map {
         this.isLoaded = true;
     }
 
-    get zoom() {
-        return this.googleMap.zoom;
-    }
-
-    set zoom(value: number) {
-        this.googleMap.setOptions({
-            zoom: value,
-        });
-    }
-
-    get maxPlaceCount() {
-        return this.googleMap.maxPlaceCount;
-    }
-
-    set maxPlaceCount(value: number) {
-        if (value < 0 || value > 24) {
-            throw new RangeError(`maxPlaceCount should be in (1, 24). Got ${value}`);
-        }
-        this.googleMap.setOptions({
-            maxValueCount: value,
-        });
-    }
-
-    setPlacePreference(pt: PlaceType, weight: number) {
-        const ptp = this.mapView.placeTypePreferences;
-        for (let i = 0; i < ptp.length; i++) {
-            const p = ptp[i];
-            if (p.type === pt) {
-                if (weight === 0) {
-                    ptp.splice(i, 1);
-                } else {
-                    p.weight = weight;
-                }
-                return;
-            }
-        }
-        ptp.push({
-            type: pt,
-            weight,
-        });
+    updateState(state: GlobalState) {
+        const zoom = this.googleMap.zoom;
+        const center = this.googleMap.center;
+        return {
+            ...state,
+            zoom,
+            center,
+        };
     }
 
     addMarker(lat: number, lng: number, title='') {
