@@ -4,6 +4,8 @@ import { useGlobalState } from '../models/store';
 import actions from '../models/actions';
 import { PlaceType } from '../models/map';
 
+import './ConfigPanel.css';
+
 const ConfigPanel = () => {
     const [state, dispatch] = useGlobalState();
 
@@ -63,9 +65,11 @@ const ConfigPanel = () => {
     }
 
     return (
-        <Grid divided>
-            {gridRows}
-        </Grid>
+        <div className="main-config">
+            <Grid centered>
+                {gridRows}
+            </Grid>
+        </div>
     );
 };
 
