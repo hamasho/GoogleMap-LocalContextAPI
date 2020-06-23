@@ -1,14 +1,12 @@
 import React from 'react';
 import './App.css';
 import GlobalStateProvider from './models/store';
-import Map from './components/Map';
-import ConfigPanel from './components/ConfigPanel';
+import MapApp from './components/MapApp';
 
 const App = () => {
     return (
         <GlobalStateProvider>
-            <Map />
-            <ConfigPanel />
+            <MapApp />
         </GlobalStateProvider>
     );
 }
