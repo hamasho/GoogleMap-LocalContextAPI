@@ -1,14 +1,10 @@
 enum PlaceType {
-    Restaurant = 'restaurant',
-    Bar = 'bar',
-    Parking = 'parking',
-    Doctor = 'doctor',
-    Store = 'store',
-    Supermarket = 'supermarket',
-    Gym = 'gym',
-    Cafe = 'cafe',
     ATM = 'atm',
+    Bar = 'bar',
+    Cafe = 'cafe',
     Park = 'park',
+    Restaurant = 'restaurant',
+    Supermarket = 'supermarket',
 };
 
 class Map {
@@ -45,15 +41,20 @@ class Map {
                 directionsOptions: { origin: {lat, lng} },
             });
 
+            (window as any).mv = localContextMapView;  // FIXME: for debug
+            that.googleMap = localContextMapView.map;
+            that.mapView = localContextMapView;
+
             // Set inner map options.
-            localContextMapView.map.setOptions({
+            that.googleMap.setOptions({
                 center: { lat, lng },
                 zoom: 15,
             });
 
-            (window as any).mv = localContextMapView;  // FIXME: for debug
-            that.googleMap = localContextMapView.map;
-            that.mapView = localContextMapView;
+            // Update styles
+            const styles = that.googleMap.get('styles').concat([
+            ]);
+            that.googleMap.setOptions({ styles });
 
             setReady();
         };
