@@ -2,12 +2,32 @@ import Action from './actions';
 import { GlobalState } from './store';
 
 enum PlaceType {
-    ATM = 'atm',
+    Atm = 'atm',
+    Bakery = 'bakery',
+    Bank = 'bank',
     Bar = 'bar',
+    BookStore = 'book_store',
     Cafe = 'cafe',
+    ClothingStore = 'clothing_store',
+    ConvenienceStore = 'convenience_store',
+    DepartmentStore = 'department_store',
+    Drugstore = 'drugstore',
+    ElectronicsStore = 'electronics_store',
+    Hospital = 'hospital',
+    JewelryStore = 'jewelry_store',
+    MovieTheater = 'movie_theater',
+    NightClub = 'night_club',
     Park = 'park',
+    Pharmacy = 'pharmacy',
+    PrimarySchool = 'primary_school',
     Restaurant = 'restaurant',
+    SecondarySchool = 'secondary_school',
+    ShoeStore = 'shoe_store',
+    ShoppingMall = 'shopping_mall',
+    Stadium = 'stadium',
     Supermarket = 'supermarket',
+    TouristAttraction = 'tourist_attraction',
+    University = 'university',
 };
 
 export type PlaceTypeWeights = {
@@ -64,7 +84,6 @@ class Map {
         const google = this.google;
         const center = state.center;
         const weights = calculateWeights(state.typeWeights);
-        console.log(weights);
         const localContextMapView = new google.maps.localContext.LocalContextMapView({
             element: document.querySelector('#map'),
             placeTypePreferences: weights,

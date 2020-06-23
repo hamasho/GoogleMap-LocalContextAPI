@@ -26,7 +26,6 @@ const reducer = (state: GlobalState, { action, payload }: DispatchArg) => {
                     [payload.placeType]: payload.weight,
                 },
             };
-            state.map.reloadAfter(newState);
             return newState;
 
         case Action.RELOAD_MAP:
@@ -34,7 +33,6 @@ const reducer = (state: GlobalState, { action, payload }: DispatchArg) => {
             state.map.reloadAfter(newState);
             return newState;
 
-        case Action.SET_ZOOM:
         default:
             throw new Error(`Invalid action: ${action}`);
     }
