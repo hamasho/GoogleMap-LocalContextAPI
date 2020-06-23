@@ -11,7 +11,6 @@ const reducer = (state: GlobalState, { action, payload }: DispatchArg) => {
 
     switch (action) {
         case Action.SET_READY:
-            console.log('ready');
             newValues.ready = true;
             return {
                 ...state,
@@ -28,6 +27,10 @@ const reducer = (state: GlobalState, { action, payload }: DispatchArg) => {
             };
             state.map.reloadAfter(newState);
             return newState;
+
+        case Action.RELOAD_MAP:
+            state.map.reloadAfter(state);
+            return state;
 
         case Action.SET_ZOOM:
         default:

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Button } from 'semantic-ui-react';
 import { useGlobalState } from '../models/store';
-import actions from '../models/actions';
+import Action from '../models/actions';
 import { PlaceType } from '../models/map';
 
 import './ConfigPanel.css';
@@ -15,12 +15,16 @@ const ConfigPanel = () => {
 
     const handleWeightChange = (pt: PlaceType, e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch({
-            action: actions.CHANGE_WEIGHT,
+            action: Action.CHANGE_WEIGHT,
             payload: {
                 placeType: pt,
                 weight: parseInt(e.target.value, 10),
             }
         })
+    };
+
+    const handleReload = (e: React.MouseEvent<HTMLElement>) => {
+        dispatch({ action: Action.RELOAD_MAP });
     };
 
     const gridRows = [];
@@ -67,6 +71,9 @@ const ConfigPanel = () => {
     return (
         <div className="main-config">
             <Grid centered>
+                <Button primary onClick={handleReload}>
+                    Reload
+                </Button>
                 {gridRows}
             </Grid>
         </div>
