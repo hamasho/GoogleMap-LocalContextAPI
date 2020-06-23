@@ -1,44 +1,13 @@
 import React  from 'react';
-import ConfigPanel from './ConfigPanel';
-import MapModel from '../models/map';
+import { useGlobalState } from '../models/store';
 import './Map.css';
 
-type State = {
-    ready: boolean,
-    map: MapModel,
-};
+const Map = () => {
+    const [state, dispatch] = useGlobalState();
+    state.map.init(state, dispatch);
+    console.log(state.zoom);
 
-class Map extends React.Component<{}, State> {
-    constructor(props: {}) {
-        super(props)
-        const map = new MapModel();
-        this.state = {
-            map,
-            ready: false,
-        };
-    }
-
-    componentDidMount() {
-        const map = this.state.map;
-        map.init(() => this.setReady());
-        this.setState({
-            map,
-        });
-    }
-
-    setReady() {
-        console.log('wtf');
-        this.setState({
-            ready: true,
-        });
-    }
-
-    render() {
-        return <div>
-            <div id="map"></div>
-            { this.state.ready ? <ConfigPanel map={this.state.map} /> : 'WAITING...' }
-        </div>;
-    }
+    return <div id="map" />;
 }
 
 export default Map;

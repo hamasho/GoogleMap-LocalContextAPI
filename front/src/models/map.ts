@@ -11,55 +11,63 @@ class Map {
     mapView: any;
     googleMap: any;
     google: any;
+    setReady: any;
+    state: any;
+    dispatch: any;
     isLoaded = false;
 
     constructor() {
         this.googleMap = null;
     }
 
-    init(setReady: () => void) {
-        if (this.isLoaded) {
-            return;
-        }
-
+    loadScript() {
         const script = document.createElement('script');
         const key = process.env.REACT_APP_MAP_API_KEY;
         script.src = `https://maps.googleapis.com/maps/api/js?libraries=localContext&v=beta&key=${key}&callback=initMap`;
         script.defer = true;
         script.async = true;
-
-        const that = this;
-
-        // Attach your callback function to the `window` object
-        (window as any).initMap = function() {
-            const lat = 35.732872, lng = 139.710090;
-            const google = that.google = (window as any)['google'];
-            const localContextMapView = new google.maps.localContext.LocalContextMapView({
-                element: document.querySelector('#map'),
-                placeTypePreferences: [{type: 'restaurant', weight: 10}],
-                maxPlaceCount: 24,
-                directionsOptions: { origin: {lat, lng} },
-            });
-
-            (window as any).mv = localContextMapView;  // FIXME: for debug
-            that.googleMap = localContextMapView.map;
-            that.mapView = localContextMapView;
-
-            // Set inner map options.
-            that.googleMap.setOptions({
-                center: { lat, lng },
-                zoom: 15,
-            });
-
-            // Update styles
-            const styles = that.googleMap.get('styles').concat([
-            ]);
-            that.googleMap.setOptions({ styles });
-
-            setReady();
-        };
-
         document.head.appendChild(script);
+        (window as any).initMap = this.initMap.bind(this);
+    }
+
+    initMap() {
+        this.google = (window as any)['google'];
+        this.loadMap();
+    }
+
+    loadMap() {
+        if ( ! this.google ) {
+            return;
+        }
+        const google = this.google;
+        const center = this.state.center;
+        const localContextMapView = new google.maps.localContext.LocalContextMapView({
+            element: document.querySelector('#map'),
+            placeTypePreferences: [{type: 'restaurant', weight: 10}],
+            maxPlaceCount: 24,
+            directionsOptions: { origin: center },
+        });
+
+        (window as any).mv = localContextMapView;  // FIXME: for debug
+        this.googleMap = localContextMapView.map;
+        this.mapView = localContextMapView;
+
+        // Set inner map options.
+        this.googleMap.setOptions({
+            center,
+            zoom: this.state.zoom,
+        });
+
+        this.dispatch({ ready: true });
+    }
+
+    init(state: any, dispatch: any) {
+        if (this.isLoaded) {
+            return;
+        }
+        this.dispatch = dispatch;
+        this.state = state;
+        this.loadScript();
         this.isLoaded = true;
     }
 

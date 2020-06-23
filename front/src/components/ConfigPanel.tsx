@@ -1,13 +1,17 @@
 import React from 'react';
 import { Form } from 'semantic-ui-react';
-import MapModel, { PlaceType } from '../models/map';
+import { useGlobalState } from '../models/store';
+import { PlaceType } from '../models/map';
 
-type Props = {
-    map: MapModel,
-};
+const ConfigPanel = () => {
+    const [state, dispatch] = useGlobalState();
+    if ( ! state.ready ) {
+        return <div>LOADING...</div>;
+    }
 
-const ConfigPanel = ({ map }: Props) => {
-    map.setPlacePreference(PlaceType.Cafe, 10);
+    setTimeout(() => dispatch({ zoom: 5 }), 2000);
+
+    state.map.setPlacePreference(PlaceType.Cafe, 10);
 
     return (
         <Form>
