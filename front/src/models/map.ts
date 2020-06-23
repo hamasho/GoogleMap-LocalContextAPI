@@ -88,7 +88,6 @@ class Map {
             element: document.querySelector('#map'),
             placeTypePreferences: weights,
             maxPlaceCount: 24,
-            directionsOptions: { origin: center },
         });
 
         (window as any).mv = localContextMapView;  // FIXME: for debug
