@@ -64,7 +64,7 @@ class Map {
     loadScript(state: GlobalState) {
         const script = document.createElement('script');
         const key = process.env.REACT_APP_MAP_API_KEY;
-        script.src = `https://maps.googleapis.com/maps/api/js?libraries=localContext&v=beta&key=${key}&callback=initMap`;
+        script.src = `https://maps.googleapis.com/maps/api/js?libraries=localContext,places&v=beta&key=${key}&callback=initMap`;
         script.defer = true;
         script.async = true;
         document.head.appendChild(script);
@@ -89,9 +89,52 @@ class Map {
             placeTypePreferences: weights,
             maxPlaceCount: 24,
         });
+        const map = localContextMapView.map;
+        this.googleMap = map;
+
+        const input = document.querySelector('#pac-input');
+        const searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+        map.addListener('bounds_changed', () => {
+            searchBox.setBounds(map.getBounds());
+        });
+        let markers: any[] = [];
+        searchBox.addListener('places_changed', () => {
+            const places = searchBox.getPlaces();
+            if (places.length === 0) {
+                return;
+            }
+            markers.forEach((marker) => marker.setMap(null));
+            markers = [];
+            const bounds = new google.maps.LatLngBounds();
+            places.forEach((place: any) => {
+                if ( ! place.geometry ) {
+                    console.log('Place contains no geometry');
+                }
+                const icon = {
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25),
+                };
+                markers.push(new google.maps.Marker({
+                    map,
+                    icon,
+                    title: place.name,
+                    position: place.geometry.location,
+                }));
+
+                if (place.geometry.viewport) {
+                    bounds.union(place.geometry.viewport);
+                } else {
+                    bounds.extend(place.geometry.location);
+                }
+                map.fitBounds(bounds);
+            });
+        });
 
         (window as any).mv = localContextMapView;  // FIXME: for debug
-        this.googleMap = localContextMapView.map;
         this.mapView = localContextMapView;
 
         // Set inner map options.
