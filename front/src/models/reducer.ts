@@ -1,26 +1,38 @@
 import Action from './actions';
+import { GlobalState } from './store';
 
 type DispatchArg = {
     action: Action,
     payload: any,
 };
 
-const reducer = (oldState: any, { action, payload }: DispatchArg) => {
-    const newValues = {};
+const reducer = (state: GlobalState, { action, payload }: DispatchArg) => {
+    let newValues: Partial<GlobalState> = {};
 
     switch (action) {
         case Action.SET_READY:
             console.log('ready');
             newValues.ready = true;
-            break;
+            return {
+                ...state,
+                ready: true
+            };
+
+        case Action.CHANGE_WEIGHT:
+            const newState = {
+                ...state,
+                typeWeights: {
+                    ...state.typeWeights,
+                    [payload.placeType]: payload.weight,
+                },
+            };
+            state.map.reloadAfter(newState);
+            return newState;
+
+        case Action.SET_ZOOM:
         default:
             throw new Error(`Invalid action: ${action}`);
     }
-
-    return {
-        ...oldState,
-        ...newValues,
-    };
 };
 
 export default reducer;
