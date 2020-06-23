@@ -1,3 +1,5 @@
+import Action from './actions';
+
 enum PlaceType {
     ATM = 'atm',
     Bar = 'bar',
@@ -58,7 +60,7 @@ class Map {
             zoom: this.state.zoom,
         });
 
-        this.dispatch({ ready: true });
+        this.dispatch({ action: Action.SET_READY });
     }
 
     init(state: any, dispatch: any) {

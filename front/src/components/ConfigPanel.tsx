@@ -4,12 +4,10 @@ import { useGlobalState } from '../models/store';
 import { PlaceType } from '../models/map';
 
 const ConfigPanel = () => {
-    const [state, dispatch] = useGlobalState();
+    const [state] = useGlobalState();
     if ( ! state.ready ) {
         return <div>LOADING...</div>;
     }
-
-    setTimeout(() => dispatch({ zoom: 5 }), 2000);
 
     state.map.setPlacePreference(PlaceType.Cafe, 10);
 

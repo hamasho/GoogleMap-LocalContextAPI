@@ -1,5 +1,6 @@
 import React from 'react';
 import MapModel from './map';
+import reducer from './reducer';
 
 interface GlobalState {
     map: MapModel,
@@ -25,10 +26,7 @@ const GlobalStateContext = React.createContext<GlobalState>(defaultGlobalState);
 const DispatchStateContext = React.createContext({});
 
 const GlobalStateProvider = ({ children }: { children: React.ReactNode }) => {
-    const [state, dispatch] = React.useReducer(
-        (oldState: GlobalState, newVal: any) => ({ ...oldState, ...newVal }),
-        defaultGlobalState,
-    );
+    const [state, dispatch] = React.useReducer(reducer, defaultGlobalState);
 
     return (
         <GlobalStateContext.Provider value={state}>
